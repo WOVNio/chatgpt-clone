@@ -1,22 +1,22 @@
-import React, { useState, useRef, useEffect, useContext } from 'react'
+import React, { useState, useRef, useEffect, useContext, FC, FormEventHandler } from 'react'
 import ChatMessage from './ChatMessage'
-import { ChatContext } from '../context/chatContext'
 import { auth } from '../firebase'
 import Thinking from './Thinking'
+import ChatContext from '../context/chatContext'
 
 /**
  * A chat view component that displays a list of messages and a form for sending new messages.
  */
-const ChatView = () => {
-  const messagesEndRef = useRef()
-  const inputRef = useRef()
+const ChatView: FC = () => {
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
   const [formValue, setFormValue] = useState('')
   const [thinking, setThinking] = useState(false)
   const options = ['ChatGPT', 'DALL·E']
   const [selected, setSelected] = useState(options[0])
-  const [messages, addMessage, , , setLimit] = useContext(ChatContext)
-  const user = auth.currentUser.uid
-  const picUrl = auth.currentUser.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'
+  const {messages, addMessage, clearMessages, limit, setLimit} = useContext(ChatContext)
+  const user = auth.currentUser?.uid
+  const picUrl = auth.currentUser?.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'
 
   /**
    * Scrolls the chat area to the bottom.
@@ -31,7 +31,7 @@ const ChatView = () => {
    * @param {string} newValue - The text of the new message.
    * @param {boolean} [ai=false] - Whether the message was sent by an AI or the user.
    */
-  const updateMessage = (newValue, ai = false, selected) => {
+  const updateMessage = (newValue: string, ai = false, selected: string) => {
     const id = Date.now() + Math.floor(Math.random() * 1000000)
     const newMsg = {
       id: id,
@@ -47,9 +47,8 @@ const ChatView = () => {
   /**
    * Sends our prompt to our API and get response to our request from openai.
    *
-   * @param {Event} e - The submit event of the form.
    */
-  const sendMessage = async (e) => {
+  const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const newMsg = formValue
@@ -105,7 +104,7 @@ const ChatView = () => {
    * Focuses the TextArea input to when the component is first rendered.
    */
   useEffect(() => {
-    inputRef.current.focus()
+    inputRef.current?.focus()
   }, [])
 
   return (

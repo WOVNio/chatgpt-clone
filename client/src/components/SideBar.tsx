@@ -1,9 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineCoffee } from 'react-icons/md'
-import { ChatContext } from '../context/chatContext'
-import bot from '../assets/bot.ico'
 import DarkMode from './DarkMode'
 import { auth } from '../firebase'
+import ChatContext from '../context/chatContext'
 
 /**
  * A sidebar component that displays a list of nav items and a toggle 
@@ -13,7 +12,7 @@ import { auth } from '../firebase'
  */
 const SideBar = () => {
   const [open, setOpen] = useState(true)
-  const [, , clearMessages, limit, setLimit] = useContext(ChatContext)
+  const {messages, addMessage, clearMessages, limit, setLimit} = useContext(ChatContext)
 
   function handleResize() {
     window.innerWidth <= 640 ? setOpen(false) : setOpen(true)
@@ -40,9 +39,7 @@ const SideBar = () => {
   return (
     <section className={` ${open ? "w-72" : "w-16"} sidebar`}>
       <div className="sidebar__app-bar">
-        <div className={`sidebar__app-logo ${!open && "scale-0 hidden"} `}>
-          <span className='w-8 h-8'><img src={bot} alt="" /></span>
-        </div>
+        <div className={`sidebar__app-logo ${!open && "scale-0 hidden"} `}></div>
         <h1 className={`sidebar__app-title ${!open && "scale-0 hidden"}`}>
           GPT3-Chatbot
         </h1>

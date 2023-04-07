@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 /**
  * A custom hook for managing state that is persisted in the local storage.
@@ -9,7 +9,7 @@ import { useState } from 'react';
  * @returns {Array} An array containing the current value of the state
  * and a function to update it.
  */
-const useLocalStorage = (key, initialValue) => {
+const useLocalStorage = (key: string, initialValue: string) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {
       const item = window.localStorage.getItem(key);
@@ -18,11 +18,12 @@ const useLocalStorage = (key, initialValue) => {
       console.log(error);
       return initialValue;
     }
-  })
+  });
 
-  const setValue = (value) => {
+  const setValue = (value: string | Function) => {
     try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      const valueToStore =
+        value instanceof Function ? value(storedValue) : value;
 
       setStoredValue(valueToStore);
 
@@ -34,4 +35,4 @@ const useLocalStorage = (key, initialValue) => {
   return [storedValue, setValue];
 };
 
-export default useLocalStorage
+export default useLocalStorage;

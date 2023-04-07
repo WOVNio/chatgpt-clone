@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import useLocalStorage from './useLocalStorage';
+import { useEffect } from "react";
+import useLocalStorage from "./useLocalStorage";
 
 /**
  * A custom hook for handling dark mode toggle in a React component.
@@ -11,17 +11,17 @@ import useLocalStorage from './useLocalStorage';
  */
 
 const useDarkMode = () => {
-  const [enabled, setEnabled] = useLocalStorage('dark-theme');
-  const isEnabled = typeof enabledState === 'undefined' && enabled;
+  const [enabled, setEnabled] = useLocalStorage("dark-theme", "");
+  const isEnabled = typeof enabled === "undefined" && enabled;
 
   useEffect(() => {
-    const className = 'dark';
+    const className = "dark";
     const bodyClass = window.document.body.classList;
 
     isEnabled ? bodyClass.add(className) : bodyClass.remove(className);
   }, [enabled, isEnabled]);
 
   return [enabled, setEnabled];
-}
+};
 
-export default useDarkMode
+export default useDarkMode;

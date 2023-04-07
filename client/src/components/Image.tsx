@@ -1,4 +1,8 @@
-import React from 'react'
+import React, { FC } from 'react'
+
+type Props = {
+  url: string;
+}
 
 /**
  * A component that displays an image.
@@ -6,7 +10,7 @@ import React from 'react'
  * @param {string} text - The source of the image to display.
  * @returns {JSX.Element} - A JSX element representing the image.
  */
-const Image = (props) => {
+const Image: FC<Props> = (props) => {
 
   return (
     <div className="message__wrapper">

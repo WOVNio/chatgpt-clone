@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { MdComputer } from 'react-icons/md'
 import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
@@ -7,13 +7,23 @@ import remarkGfm from 'remark-gfm'
 import moment from 'moment'
 import Image from './Image'
 
+type Props = {
+  message: {
+    id: number,
+    createdAt: number,
+    text: string,
+    ai: boolean,
+    selected?: string,
+    picUrl: string
+  }
+}
+
 /**
  * A chat message component that displays a message with a timestamp and an icon.
  *
- * @param {Object} props - The properties for the component.
  */
-const ChatMessage = (props) => {
-  const { id, createdAt, text, ai = false, selected, picUrl } = props.message
+const ChatMessage: FC<Props> = (props) => {
+  const { id, createdAt, text, ai = false, selected = 'davinci', picUrl } = props.message
   console.log(picUrl)
 
   return (
@@ -27,7 +37,7 @@ const ChatMessage = (props) => {
               children={text}
               remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
               components={{
-                code({ node, inline, className, children, ...props }) {
+                code({ node, inline, className, children, style, ...props }) {
                   const match = /language-(\w+)/.exec(className || 'language-js')
                   return !inline && match ? (
                     <SyntaxHighlighter

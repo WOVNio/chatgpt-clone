@@ -1,6 +1,6 @@
 import Home from './pages/Home'
 import SignIn from './pages/SignIn'
-import { ChatContextProvider } from './context/chatContext'
+import { ChatContextProvider } from './context/chatContextProvider'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 import { auth } from './firebase'
