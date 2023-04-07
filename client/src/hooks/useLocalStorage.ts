@@ -9,7 +9,7 @@ import { useState } from "react";
  * @returns {Array} An array containing the current value of the state
  * and a function to update it.
  */
-const useLocalStorage = (key: string, initialValue: string) => {
+const useLocalStorage = (key: string, initialValue: any) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {
       const item = window.localStorage.getItem(key);
