@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { MdComputer } from 'react-icons/md'
 import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
@@ -14,7 +14,8 @@ type Props = {
     text: string,
     ai: boolean,
     selected?: string,
-    picUrl: string
+    picUrl: string,
+    token: number,
   }
 }
 
@@ -23,7 +24,7 @@ type Props = {
  *
  */
 const ChatMessage: FC<Props> = (props) => {
-  const { id, createdAt, text, ai = false, selected = 'davinci', picUrl } = props.message
+  const { id, createdAt, text, ai = false, selected = 'davinci', picUrl, token } = props.message
   console.log(picUrl)
 
   return (
@@ -50,6 +51,7 @@ const ChatMessage: FC<Props> = (props) => {
 
 
             <div className={`${ai ? 'text-left' : 'text-right'} message__createdAt`}>{moment(createdAt).calendar()}</div>
+            <div className={`${ai ? 'text-left' : 'text-right'} message__token`}>{ token } token</div>
           </div>}
 
       <div className="message__pic">

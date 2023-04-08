@@ -130,6 +130,10 @@
     @apply text-sm font-thin italic text-slate-600 dark:text-slate-300;
   }
 
+  .message__token {
+    @apply text-sm font-thin italic text-slate-600 dark:text-slate-300;
+  }
+
   .message__pic{
     @apply h-10 w-10 bg-slate-200 mx-2 rounded-full flex items-center justify-center text-xl;
   }

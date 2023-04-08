@@ -41,7 +41,7 @@ const SideBar = () => {
       <div className="sidebar__app-bar">
         <div className={`sidebar__app-logo ${!open && "scale-0 hidden"} `}></div>
         <h1 className={`sidebar__app-title ${!open && "scale-0 hidden"}`}>
-          GPT3-Chatbot
+          WOVN ChatGPT
         </h1>
         <div className='sidebar__btn-close' onClick={() => setOpen(!open)}>
           {open ? <MdClose className='sidebar__btn-icon' /> : <MdMenu className='sidebar__btn-icon' />}
@@ -59,8 +59,7 @@ const SideBar = () => {
       {limit >= 0 &&
         <div className={`nav__msg ${!open && "scale-0 hidden"}`}>
           <p className='nav__p'>
-            you have {limit} requests left today.
-
+            you have {limit || 'unlimited'} requests left today.
           </p>
         </div>}
 
