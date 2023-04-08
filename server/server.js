@@ -4,6 +4,8 @@ import { Configuration, OpenAIApi } from "openai";
 import * as dotenv from "dotenv";
 import Filter from "bad-words";
 import { rateLimitMiddleware } from "./middlewares/rateLimitMiddleware.js";
+import { redis } from "./redis.js";
+import gpt3Encoder from "gpt-3-encoder";
 
 const allowedOrigins = ["http://localhost", "https://www.wovn-chatgpt.xyz"];
 
@@ -54,19 +56,51 @@ app.get("/", (req, res) => {
  */
 app.post("/davinci", async (req, res) => {
   // Validate request body
-  if (!req.body.prompt) {
+  if (!req.body.prompt || !req.body.conversationId) {
+    console.error(req.body);
     return res.status(400).send({
-      error: 'Missing required field "prompt" in request body',
+      error:
+        'Missing required field "prompt" or "conversationId" in request body',
     });
   }
 
   try {
     // Call OpenAI API
-    const { prompt, user } = req.body;
+    const { prompt, user, conversationId } = req.body;
     const cleanPrompt = filter.isProfane(prompt)
       ? filter.clean(prompt)
       : prompt;
     console.log(cleanPrompt);
+    redis.rpush(
+      `ChatGPTConversation::${conversationId}`,
+      JSON.stringify({ role: "user", content: cleanPrompt })
+    );
+
+    const rawConversationLog = await redis.lrange(
+      `ChatGPTConversation::${conversationId}`,
+      0,
+      -1
+    );
+
+    let totalToken = 0;
+    const newConversationLog = [];
+    rawConversationLog.some((rawMsg) => {
+      const msg = JSON.parse(rawMsg);
+      const token = gpt3Encoder.encode(msg.content).length;
+      if (totalToken + token > 500) {
+        console.log(
+          "pop!!!",
+          redis.lpop(`ChatGPTConversation::${conversationId}`)
+        );
+        return true;
+      }
+
+      totalToken += token;
+      newConversationLog.push(msg);
+      return false;
+    });
+
+    console.log(newConversationLog);
 
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -76,9 +110,7 @@ app.post("/davinci", async (req, res) => {
           content:
             "you're an a AI assistant that replies to all my questions in markdown format.",
         },
-        { role: "user", content: "hi" },
-        { role: "assistant", content: "Hi! How can I help you?" },
-        { role: "user", content: `${cleanPrompt}?` },
+        ...newConversationLog,
       ],
       user: user,
       temperature: 0.5,
@@ -88,8 +120,15 @@ app.post("/davinci", async (req, res) => {
       presence_penalty: 0.2,
     });
 
-    console.log(response.data.choices[0].message.content);
+    console.log(response);
+    const content = response.data.choices[0].message.content;
+    console.log(content);
     console.log(user);
+
+    redis.rpush(
+      `ChatGPTConversation::${conversationId}`,
+      JSON.stringify({ role: "assistant", content: content })
+    );
     // Return response from OpenAI API
     res.status(200).send({
       bot: response.data.choices[0].message.content,
@@ -97,7 +136,7 @@ app.post("/davinci", async (req, res) => {
     });
   } catch (error) {
     // Log error and return a generic error message
-    console.error(error);
+    console.error(error.response.data);
     res.status(500).send({
       error: "Something went wrong",
     });

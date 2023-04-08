@@ -2,15 +2,13 @@ FROM --platform=linux/amd64  node:18.12.1
 
 WORKDIR /usr/src/app
 
-RUN npm install -g pnpm
-
 COPY package*.json ./
-COPY pnpm-lock.yaml ./
+COPY yarn.lock ./
 
-RUN pnpm install
+RUN yarn
 
 COPY . .
 
 EXPOSE 3001
 
-CMD [ "pnpm", "run", "server" ]
+CMD [ "yarn", "start" ]

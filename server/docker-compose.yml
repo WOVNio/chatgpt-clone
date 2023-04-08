@@ -3,6 +3,8 @@ services:
   app:
     build: .
     image: chatgpt-clone-server
+    env_file:
+      - .env
     ports:
       - "3001:3001"
     depends_on:

@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "nodemon server",
-    "server": "nodemon server"
+    "server": "nodemon server",
+    "dev": "docker image build -t chatgpt-clone-server . && docker compose up"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "gpt-3-encoder": "^1.1.4",
     "ioredis": "^5.2.4",
     "nodemon": "^2.0.20",
     "openai": "^3.2.1"
