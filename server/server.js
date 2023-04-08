@@ -24,6 +24,8 @@ const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const maxTokenInConversation = 3072;
+
 // Create OpenAI API client
 const openai = new OpenAIApi(configuration);
 
@@ -87,11 +89,9 @@ app.post("/davinci", async (req, res) => {
     rawConversationLog.some((rawMsg) => {
       const msg = JSON.parse(rawMsg);
       const token = gpt3Encoder.encode(msg.content).length;
-      if (totalToken + token > 500) {
-        console.log(
-          "pop!!!",
-          redis.lpop(`ChatGPTConversation::${conversationId}`)
-        );
+      if (totalToken + token > maxTokenInConversation) {
+        const poppedMsg = redis.lpop(`ChatGPTConversation::${conversationId}`);
+        console.log("pop: ", poppedMsg);
         return true;
       }
 
