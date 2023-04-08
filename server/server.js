@@ -120,7 +120,6 @@ app.post("/davinci", async (req, res) => {
       presence_penalty: 0.2,
     });
 
-    console.log(response);
     const content = response.data.choices[0].message.content;
     console.log(content);
     console.log(user);
