@@ -25,7 +25,6 @@ type Props = {
  */
 const ChatMessage: FC<Props> = (props) => {
   const { id, createdAt, text, ai = false, selected = 'davinci', picUrl, token } = props.message
-  console.log(picUrl)
 
   return (
     <div key={id} className={`${ai && 'flex-row-reverse'} message`}>
@@ -33,8 +32,8 @@ const ChatMessage: FC<Props> = (props) => {
         selected === 'DALL·E' && ai ?
           <Image url={text} />
           :
-          <div className='message__wrapper'>
-            <ReactMarkdown className={`message__markdown ${ai ? 'text-left' : 'text-right'}`}
+          <div data-wovn-ignore className='message__wrapper'>
+            <ReactMarkdown data-wovn-ignore className={`message__markdown ${ai ? 'text-left' : 'text-right'}`}
               children={text}
               remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
               components={{
@@ -50,8 +49,8 @@ const ChatMessage: FC<Props> = (props) => {
               }} />
 
 
-            <div className={`${ai ? 'text-left' : 'text-right'} message__createdAt`}>{moment(createdAt).calendar()}</div>
-            <div className={`${ai ? 'text-left' : 'text-right'} message__token`}>{ token } token</div>
+            <div data-wovn-ignore className={`${ai ? 'text-left' : 'text-right'} message__createdAt`}>{moment(createdAt).calendar()}</div>
+            <div data-wovn-ignore className={`${ai ? 'text-left' : 'text-right'} message__token`}>{ token } token</div>
           </div>}
 
       <div className="message__pic">
